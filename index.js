@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const cors = require('cors');
 const port = process.env.PORT || 5000;
@@ -40,9 +40,38 @@ async function run() {
             res.send(result)
         })
 
-        app.get('/users', async(req, res)=>{
-            const result = await usersCollection.find().toArray()
+        app.get('/users', async (req, res) => {
+            let email = {}
+            if (req.query?.email) {
+                email = { email: req.query.email }
+            }
+            const result = await usersCollection.find(email).toArray()
             res.send(result)
+        })
+
+        app.patch('/updateProfile/:id', async (req, res) => {
+            const id = req.params.id
+            const body = req.body;
+            const filter = { _id: new ObjectId(id) }
+            const updatedUser = {
+                $set: {
+                                      
+                }
+            }
+            if (body?.skill !== undefined) {
+                updatedUser.$set.skill = body.skill;
+            }
+            if (body?.about !== undefined) {
+                updatedUser.$set.about = body.about;
+            }
+            if (body?.image !== undefined) {
+                updatedUser.$set.image = body.image;
+            }
+            if (body?.phone !== undefined) {
+                updatedUser.$set.phone = body.phone;
+            }
+            const result = await usersCollection.updateOne(filter, updatedUser);
+            res.send(result);
         })
 
 
