@@ -28,6 +28,11 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
         const usersCollection = client.db('OruUser').collection('user')
+        const experienceCollection = client.db('OruUser').collection('experience')
+        const skillsCollection = client.db('OruUser').collection('skill')
+        const certificateCollection = client.db('OruUser').collection('certificate')
+        const educationCollection = client.db('OruUser').collection('education')
+      
 
         app.post('/users', async (req, res) => {
             const user = req.body;
@@ -48,6 +53,64 @@ async function run() {
             const result = await usersCollection.find(email).toArray()
             res.send(result)
         })
+
+        app.post('/experience', async(req, res)=>{
+            const body = req.body
+            const result = await experienceCollection.insertOne(body)
+            res.send(result)
+        })
+        app.get('/experience', async (req, res) => {
+            let email = {}
+            if (req.query?.email) {
+                email = { email: req.query.email }
+            }
+            const result = await experienceCollection.find(email).toArray()
+            res.send(result)
+        })
+
+        app.post('/skills', async(req, res)=>{
+            const body = req.body
+            const result = await skillsCollection.insertOne(body)
+            res.send(result)
+        })
+         app.get('/skills', async (req, res) => {
+            let email = {}
+            if (req.query?.email) {
+                email = { email: req.query.email }
+            }
+            const result = await skillsCollection.find(email).toArray()
+            res.send(result)
+        })
+        // certificate
+         app.post('/certificate', async(req, res)=>{
+            const body = req.body
+            const result = await certificateCollection.insertOne(body)
+            res.send(result)
+        })
+        
+        app.get('/certificate', async (req, res) => {
+            let email = {}
+            if (req.query?.email) {
+                email = { email: req.query.email }
+            }
+            const result = await certificateCollection.find(email).toArray()
+            res.send(result)
+        })
+        // education
+         app.post('/education', async(req, res)=>{
+            const body = req.body
+            const result = await educationCollection.insertOne(body)
+            res.send(result)
+        })
+        app.get('/education', async (req, res) => {
+            let email = {}
+            if (req.query?.email) {
+                email = { email: req.query.email }
+            }
+            const result = await educationCollection.find(email).toArray()
+            res.send(result)
+        })
+
 
         app.patch('/updateProfile/:id', async (req, res) => {
             const id = req.params.id
